@@ -22,6 +22,7 @@ export const validateFields = (req: Request, res: Response, next: NextFunction) 
     if (!email) errorsMessage.email = "Email is required";
     
     
+    
     if (Object.keys(errorsMessage).length > 0) {
         return res.status(400).json(errorsMessage);
     }

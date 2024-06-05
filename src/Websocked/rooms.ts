@@ -2,13 +2,17 @@ import WebSocket from 'ws';
 import { Server } from 'http';
 import { addCommentPublication, getComments } from '../Controllers/comments';
 
+// @chat openai and backend
 
 export const setUpWebSocket = (server: Server) => {
+  const publicationSockets : any = {}; 
+
   const wss = new WebSocket.Server({ server });
 
   wss.on('connection', (ws) => {
-
     console.log("Nuevo cliente conectado");
+    console.log({publicationSockets});
+    
    
     ws.onerror = (error) => {
       console.error('Error en la conexión WebSocket:', error);
@@ -16,21 +20,30 @@ export const setUpWebSocket = (server: Server) => {
 
     ws.on('close', () => {
       console.log('Conexión cerrada');
+      
+     
+      Object.entries(publicationSockets).forEach(([publicationId, socket]) => {
+        if (socket === ws) {
+          delete publicationSockets[publicationId];
+        }
+      });
     });
 
     ws.on('message', async (message) => {
       const { publicationId, comment, userId, accion } = JSON.parse(message.toString());
+
 
       switch (accion) {
         case "postMessage":
           try {
             const newComment = await addCommentPublication(publicationId, comment, userId);
             if (newComment) {
-              wss.clients.forEach(client => {
-                if (client.readyState === WebSocket.OPEN) {
-                  client.send(JSON.stringify({ event: 'newComment', data: newComment }));
-                }
-              });
+             
+              if (publicationSockets[publicationId] && publicationSockets[publicationId].readyState === WebSocket.OPEN) {
+                publicationSockets[publicationId].send(JSON.stringify({ event: 'newComment', data: newComment }));
+              } else {
+                ws.send(JSON.stringify({ error: 'La conexión WebSocket para esta publicación está cerrada' }));
+              }
             } else {
               ws.send(JSON.stringify({ error: 'Publicación no encontrada' }));
             }
@@ -54,7 +67,14 @@ export const setUpWebSocket = (server: Server) => {
 
           }
           break;
+
+        case "registerPublication":
+
+            console.log("se unio a la publicacion");
+          publicationSockets[publicationId] = ws;
+          break;
       }
+      
     });
   });
 };

@@ -21,6 +21,7 @@ export const addCommentPublication = async (publicationId: string, comment: stri
         const numComments = publication.comment.length;
 
         const send = {
+            publicationId: publicationId,
             comments: publication.comment.map(c => ({
                 user: c.user,
                 content: c.content,
@@ -52,18 +53,23 @@ export const getComments = async (publicationId: string) => {
 
         const numComments = publication.comment.length;
 
-        const comments = publication.comment.map(c => ({
+        const comments: any = publication.comment.map(c => ({
             user: c.user,
             content: c.content,
             date: c.date
         }));
 
-        return {
-            comments: comments,
-            numComments: numComments
+        const response = {
+                publicationId: publicationId,
+                comments: comments,
+                numComments: numComments
+            
         };
+
+        return response;
     } catch (error) {
         console.error('Error al obtener los comentarios de la publicación:', error);
         return null;
     }
 };
+

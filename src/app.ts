@@ -9,7 +9,7 @@ import http from "http";
 
 const app = express();
 const server = http.createServer(app);
-import { setUpWebSocket } from "./Websocked/websocked";
+import { setUpWebSocket } from "./Websocked/rooms";
 
 //middlewares
 app.use(express.json())
