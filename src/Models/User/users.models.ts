@@ -5,6 +5,7 @@ export interface IUser extends Document {
     username: string;
     email: string;
     password: string;
+    imgPerfil: string;
     encrypPassword(password: string): Promise<string>;
     validatePassword(password: string): Promise<boolean>;
 };

@@ -4,9 +4,7 @@ import { Request, Response, NextFunction } from 'express'
 export const addPublication = async (req: Request, res: Response) => {
     try {
         const { content, image, userId } = req.body;
-
-        console.log({userId});
-        
+     
         const existedUser = await Users.findById(userId);
         
         if (!existedUser) return res.status(404).json({ message: "User not found" });

@@ -25,6 +25,8 @@ export const setUpWebSocket = (server: Server) => {
         case "postMessage":
           try {
             const newComment = await addCommentPublication(publicationId, comment, userId);
+            
+              
             if (newComment) {
               wss.clients.forEach(client => {
                 if (client.readyState === WebSocket.OPEN) {

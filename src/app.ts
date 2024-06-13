@@ -9,7 +9,7 @@ import http from "http";
 
 const app = express();
 const server = http.createServer(app);
-import { setUpWebSocket } from "./Websocked/rooms";
+import { setUpWebSocket } from "./Websocked/websocked";
 
 //middlewares
 app.use(express.json())
@@ -20,6 +20,7 @@ const Port = ConfigConextion.PORT || 4000;
 setUpWebSocket(server);
 
 server.listen(Port, () => {
+    console.clear();
     console.log(`Server on port ${Port}`);
 });
 
