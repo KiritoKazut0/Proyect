@@ -13,7 +13,16 @@ import { setUpWebSocket } from "./Websocked/websocked";
 
 //middlewares
 app.use(express.json())
-app.use(cors())
+const corsOptions = {
+    origin: '*', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'token'], 
+    optionsSuccessStatus: 200,
+    
+};
+
+app.use(cors(corsOptions));
+
 
 const Port = ConfigConextion.PORT || 4000;
 
