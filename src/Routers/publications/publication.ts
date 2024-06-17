@@ -12,10 +12,4 @@ router.post('/reaction-initial', getReaccionsInitialForAll );
 router.get('/reaction', newReactions);
 router.post('/reaction/add',addReactions );
 
-
-
-
-
-
-
 export default router;
